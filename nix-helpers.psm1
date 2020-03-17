@@ -59,12 +59,10 @@ Function Append-EnvironmentVariable {
         [string] $value
     )
     Write-Debug "Set ${variableName} to ${value}"
-    try {
-        $previousValue = (Get-Item env:$variableName).Value     
+    if (Test-Path env:$variableName) {
+        $previousValue = (Get-Item env:$variableName).Value
+        Set-Item env:$variableName "${value} ${previousValue}"
+    } else {
+        Set-Item env:$variableName "${value}"
     }
-    catch {
-        $previousValue = ""
-        Write-Debug "${variableName} not found."
-    }
-    Set-Item env:$variableName "${value} ${previousValue}" 
-  }
+}

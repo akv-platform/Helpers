@@ -67,7 +67,7 @@ Function Append-EnvironmentVariable {
     }
 }
 
-Function ExecuteCommand {
+Function Execute-Command {
     param(
         [string] $command
     )

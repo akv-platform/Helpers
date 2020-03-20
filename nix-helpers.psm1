@@ -66,3 +66,19 @@ Function Append-EnvironmentVariable {
         Set-Item env:$variableName "${value}"
     }
 }
+
+Function ExecuteCommand {
+    param(
+        [string] $command
+    )
+
+    Write-Debug "Execute $command"
+    
+    try {
+        Invoke-Expression $command | ForEach-Object { Write-Host $_ }
+    }
+    catch {
+        Write-Host "Error happened during command execution: $command"
+        Write-Host "##vso[task.logissue type=error;] $_"
+    }
+}

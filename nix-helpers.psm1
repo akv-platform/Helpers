@@ -73,7 +73,7 @@ Function ExecuteCommand {
     )
 
     Write-Debug "Execute $command"
-    
+
     try {
         Invoke-Expression $command | ForEach-Object { Write-Host $_ }
     }

@@ -35,7 +35,7 @@ Function Download-Source {
 
     # Download source
     try {
-        Invoke-WebRequest -Uri $uri -OutFile $outFile
+        (New-Object System.Net.WebClient).DownloadFile($Uri, $OutFile)
     } catch {
         "$_"
         break

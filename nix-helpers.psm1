@@ -10,10 +10,10 @@ Function New-SetupFile {
     $minorVersion = $Version.Minor
     $buildVersion = $Version.Build
     
-    $templateSetupSh = Get-Content -Path $templatePath -Raw
-    $setupSh = $templateSetupSh -f $majorVersion, $minorVersion, $buildVersion, $ToolCachePath
+    $templateSetupSh = Get-Content -Path $TemplatePath -Raw
+    $setupSh = $TemplateSetupSh -f $majorVersion, $minorVersion, $buildVersion, $ToolCachePath
     
-    $setupSh | Out-File -FilePath $shPath -Encoding utf8
+    $setupSh | Out-File -FilePath $ShPath -Encoding utf8
 }
 
 Function Archive-Zip {
@@ -22,8 +22,8 @@ Function Archive-Zip {
         [String]$ToolZipFile
     )
 
-    Push-Location -Path $pathToArchive
-    zip -q -r $toolZipFile * | Out-Null
+    Push-Location -Path $PathToArchive
+    zip -q -r $ToolZipFile * | Out-Null
     Pop-Location
 }
 
@@ -33,7 +33,7 @@ Function Download-Source {
         [String]$OutFile
     )
 
-    # Download source
+    Write-Debug "Download source from $Uri to $OutFile"
     try {
         (New-Object System.Net.WebClient).DownloadFile($Uri, $OutFile)
     } catch {
@@ -49,36 +49,36 @@ Function Unpack-TarArchive {
         [String]$TarCommands = "xvzf"
     )
 
-    # Unpack archive.tgz
-    tar -C $expandArchivePath -$TarCommands $outFile | Out-Null
+    Write-Debug "Unpack $ExpandArchivePath to $OutFile"
+    tar -C $ExpandArchivePath -$TarCommands $OutFile | Out-Null
 }
 
 Function Append-EnvironmentVariable {
     param(
-        [string] $variableName, 
-        [string] $value
+        [string] $VariableName, 
+        [string] $Value
     )
-    Write-Debug "Set ${variableName} to ${value}"
-    if (Test-Path env:$variableName) {
-        $previousValue = (Get-Item env:$variableName).Value
-        Set-Item env:$variableName "${value} ${previousValue}"
+    Write-Debug "Set ${VariableName} to ${Value}"
+    if (Test-Path env:$VariableName) {
+        $PreviousValue = (Get-Item env:$VariableName).Value
+        Set-Item env:$VariableName "${Value} ${PreviousValue}"
     } else {
-        Set-Item env:$variableName "${value}"
+        Set-Item env:$variableName "${Value}"
     }
 }
 
 Function Execute-Command {
     param(
-        [string] $command
+        [string] $Command
     )
 
-    Write-Debug "Execute $command"
+    Write-Debug "Execute $Command"
 
     try {
-        Invoke-Expression $command | ForEach-Object { Write-Host $_ }
+        Invoke-Expression $Command | ForEach-Object { Write-Host $_ }
     }
     catch {
-        Write-Host "Error happened during command execution: $command"
+        Write-Host "Error happened during command execution: $Command"
         Write-Host "##vso[task.logissue type=error;] $_"
     }
 }

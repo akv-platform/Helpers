@@ -43,28 +43,15 @@ Function Download-Source {
 }
 
 Function Unpack-TarArchive {
+    [CmdletBinding()]
     param(
         [String]$OutFile,
         [String]$ExpandArchivePath = $env:BUILD_STAGINGDIRECTORY,
         [String]$TarCommands = "xvzf"
     )
 
-    Write-Debug "Unpack $ExpandArchivePath to $OutFile"
+    Write-Debug "Unpack $OutFile to $ExpandArchivePath"
     tar -C $ExpandArchivePath -$TarCommands $OutFile
-}
-
-Function Append-EnvironmentVariable {
-    param(
-        [string] $VariableName, 
-        [string] $Value
-    )
-    Write-Debug "Set ${VariableName} to ${Value}"
-    if (Test-Path env:$VariableName) {
-        $PreviousValue = (Get-Item env:$VariableName).Value
-        Set-Item env:$VariableName "${Value} ${PreviousValue}"
-    } else {
-        Set-Item env:$variableName "${Value}"
-    }
 }
 
 Function Execute-Command {

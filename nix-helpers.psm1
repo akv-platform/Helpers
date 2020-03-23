@@ -50,7 +50,7 @@ Function Unpack-TarArchive {
     )
 
     Write-Debug "Unpack $ExpandArchivePath to $OutFile"
-    tar -C $ExpandArchivePath -$TarCommands $OutFile | Out-Null
+    tar -C $ExpandArchivePath -$TarCommands $OutFile
 }
 
 Function Append-EnvironmentVariable {

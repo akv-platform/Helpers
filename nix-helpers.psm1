@@ -68,6 +68,7 @@ Function Append-EnvironmentVariable {
 }
 
 Function Execute-Command {
+    [CmdletBinding()]
     param(
         [string] $Command
     )
